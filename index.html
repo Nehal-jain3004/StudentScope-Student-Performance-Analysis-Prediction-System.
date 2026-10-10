@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudentScope — Student Performance Analysis & Prediction System</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-icon">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                </div>
+                <div class="logo-text">
+                    <h2>StudentScope</h2>
+                    <span>Analytics & ML Predictor</span>
+                </div>
+                <button class="close-sidebar-btn" id="closeSidebarBtn" aria-label="Close Navigation">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="nav-item active" data-section="dashboard-section">
+                        <a href="#dashboard">
+                            <i class="fa-solid fa-chart-pie"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item" data-section="analysis-section">
+                        <a href="#analysis">
+                            <i class="fa-solid fa-chart-line"></i>
+                            <span>Data Analysis</span>
+                        </a>
+                    </li>
+                    <li class="nav-item" data-section="predict-section">
+                        <a href="#predict">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i>
+                            <span>Predict Performance</span>
+                        </a>
+                    </li>
+                    <li class="nav-item" data-section="insights-section">
+                        <a href="#insights">
+                            <i class="fa-solid fa-brain"></i>
+                            <span>Model Insights</span>
+                        </a>
+                    </li>
+                    <li class="nav-item" data-section="about-section">
+                        <a href="#about">
+                            <i class="fa-solid fa-circle-info"></i>
+                            <span>About Project</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="system-status">
+                    <span class="status-dot online"></span>
+                    <div class="status-info">
+                        <span class="status-title">Dataset UI Mode</span>
+                        <span class="status-subtitle">UCI Student Dataset</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Sidebar Overlay for mobile -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Top Header Navbar -->
+            <header class="top-header">
+                <div class="header-left">
+                    <button class="hamburger-btn" id="hamburgerBtn" aria-label="Toggle Menu">
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
+                    <div class="header-title">
+                        <h1 id="pageTitle">Dashboard Overview</h1>
+                        <p id="pageSubtitle">Student performance statistics and real-time analytical metrics</p>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <div class="search-bar">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" id="globalSearchInput" placeholder="Search student records...">
+                    </div>
+                    <div class="header-badge">
+                        <i class="fa-solid fa-database"></i>
+                        <span>Sample Size: 395 Students</span>
+                    </div>
+                    <div class="user-avatar">
+                        <i class="fa-solid fa-user-graduate"></i>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Scrollable Content Body -->
+            <div class="content-body">
+
+                <!-- SECTION 1: DASHBOARD -->
+                <section id="dashboard-section" class="content-section active">
+                    <!-- Dashboard Cards Row -->
+                    <div class="metrics-grid">
+                        <div class="metric-card primary">
+                            <div class="card-icon">
+                                <i class="fa-solid fa-users-between-lines"></i>
+                            </div>
+                            <div class="card-details">
+                                <h3>Total Students</h3>
+                                <div class="metric-value" id="totalStudentsCount">395</div>
+                                <span class="metric-subtext"><i class="fa-solid fa-circle-check"></i> Math & Portuguese cohorts</span>
+                            </div>
+                        </div>
+
+                        <div class="metric-card success">
+                            <div class="card-icon">
+                                <i class="fa-solid fa-award"></i>
+                            </div>
+                            <div class="card-details">
+                                <h3>Average Final Grade</h3>
+                                <div class="metric-value" id="avgFinalGrade">11.81 <span class="unit">/ 20</span></div>
+                                <span class="metric-subtext positive"><i class="fa-solid fa-arrow-trend-up"></i> 59.1% Overall Average</span>
+                            </div>
+                        </div>
+
+                        <div class="metric-card info">
+                            <div class="card-icon">
+                                <i class="fa-solid fa-book-open-reader"></i>
+                            </div>
+                            <div class="card-details">
+                                <h3>Avg Weekly Study</h3>
+                                <div class="metric-value" id="avgStudyHours">5.2 <span class="unit">hrs/wk</span></div>
+                                <span class="metric-subtext"><i class="fa-solid fa-clock"></i> Tier 2 (2 to 5 hours)</span>
+                            </div>
+                        </div>
+
+                        <div class="metric-card warning">
+                            <div class="card-icon">
+                                <i class="fa-solid fa-chart-line-up font-icon"></i>
+                                <i class="fa-solid fa-graduation-cap"></i>
+                            </div>
+                            <div class="card-details">
+                                <h3>Pass Rate (G3 &ge; 10)</h3>
+                                <div class="metric-value" id="passRate">67.1%</div>
+                                <span class="metric-subtext positive"><i class="fa-solid fa-check"></i> 265 Students Passing</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Charts Grid Row 1 -->
+                    <div class="charts-grid two-col">
+                        <div class="chart-card">
+                            <div class="card-header">
+                                <div>
+                                    <h2><i class="fa-solid fa-chart-simple"></i> Grade Distribution (G3 Final)</h2>
+                                    <p>Distribution of student final grades across 4 proficiency tiers</p>
+                                </div>
+                                <div class="chart-actions">
+                                    <span class="badge badge-navy">Distribution</span>
+                                </div>
+                            </div>
+                            <div class="chart-body">
+                                <canvas id="gradeDistributionChart"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="chart-card">
+                            <div class="card-header">
+                                <div>
+                                    <h2><i class="fa-solid fa-graduation-cap"></i> Study Time vs. Final Grade</h2>
+                                    <p>Impact of weekly study hours on average final score achieved</p>
+                                </div>
+                                <div class="chart-actions">
+                                    <span class="badge badge-blue">Correlation</span>
+                                </div>
+                            </div>
+                            <div class="chart-body">
+                                <canvas id="studyVsGradeChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Overview Data Table Card -->
+                    <div class="data-table-card">
+                        <div class="card-header border-bottom">
+                            <div>
+                                <h2><i class="fa-solid fa-table-list"></i> Student Performance Overview</h2>
+                                <p>Interactive preview of sample student records with period scores</p>
+                            </div>
+                            <div class="table-controls">
+                                <select id="tableFilterSubject" class="form-select-sm">
+                                    <option value="all">All Performance Tiers</option>
+                                    <option value="high">High Achievers (&ge;14)</option>
+                                    <option value="average">Average Achievers (10-13)</option>
+                                    <option value="at-risk">At Risk (&lt;10)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="custom-table" id="studentsTable">
+                                <thead>
+                                    <tr>
+                                        <th>Student ID</th>
+                                        <th>Age</th>
+                                        <th>Study Time</th>
+                                        <th>Absences</th>
+                                        <th>Period 1 (G1)</th>
+                                        <th>Period 2 (G2)</th>
+                                        <th>Final Grade (G3)</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="studentsTableBody">
+                                    <!-- Dynamic rows loaded via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="table-footer">
+                            <span class="table-info" id="tableRecordCount">Showing sample student records</span>
+                            <div class="pagination">
+                                <button class="btn-page" id="prevPageBtn" disabled><i class="fa-solid fa-chevron-left"></i> Prev</button>
+                                <span class="page-num" id="currentPageNum">Page 1 of 3</span>
+                                <button class="btn-page" id="nextPageBtn">Next <i class="fa-solid fa-chevron-right"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECTION 2: DATA ANALYSIS -->
+                <section id="analysis-section" class="content-section">
+                    <div class="section-intro">
+                        <div class="intro-card">
+                            <i class="fa-solid fa-chart-column intro-icon"></i>
+                            <div>
+                                <h2>Exploratory Data Analysis (EDA)</h2>
+                                <p>Deep dive into behavioral indicators, subject comparisons, absence penalties, and academic progression.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Analysis Charts Grid -->
+                    <div class="charts-grid two-col">
+                        <!-- Subject Performance Comparison -->
+                        <div class="chart-card">
+                            <div class="card-header">
+                                <div>
+                                    <h2><i class="fa-solid fa-book-bookmark"></i> Period Score Progression</h2>
+                                    <p>Comparing average scores across Period 1 (G1), Period 2 (G2), and Final (G3)</p>
+                                </div>
+                                <span class="badge badge-navy">Progression</span>
+                            </div>
+                            <div class="chart-body">
+                                <canvas id="gradeProgressionChart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Absences vs Grade Analysis -->
+                        <div class="chart-card">
+                            <div class="card-header">
+                                <div>
+                                    <h2><i class="fa-solid fa-user-slash"></i> Absences Impact Analysis</h2>
+                                    <p>Correlation between class absences and final grade performance</p>
+                                </div>
+                                <span class="badge badge-warning">Penalty Trend</span>
+                            </div>
+                            <div class="chart-body">
+                                <canvas id="absencesAnalysisChart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Study Time Analysis -->
+                        <div class="chart-card">
+                            <div class="card-header">
+                                <div>
+                                    <h2><i class="fa-solid fa-clock-rotate-left"></i> Study Habit & Support Radar</h2>
+                                    <p>Multivariate radar analysis of study attributes for high vs low scorers</p>
+                                </div>
+                                <span class="badge badge-blue">Radar Profile</span>
+                            </div>
+                            <div class="chart-body">
+                                <canvas id="studyHabitsRadarChart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Subject Comparison Bar Chart -->
+                        <div class="chart-card">
+                            <div class="card-header">
+                                <div>
+                                    <h2><i class="fa-solid fa-shapes"></i> Performance by Failure History</h2>
+                                    <p>Impact of prior class failures on average final outcome</p>
+                                </div>
+                                <span class="badge badge-navy">Failure Risk</span>
+                            </div>
+                            <div class="chart-body">
+                                <canvas id="failuresImpactChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Analytical Insights Summary Cards -->
+                    <div class="insights-summary-grid">
+                        <div class="insight-box highlight-blue">
+                            <div class="insight-icon"><i class="fa-solid fa-lightbulb"></i></div>
+                            <div class="insight-content">
+                                <h4>Study Hours Correlation</h4>
+                                <p>Students studying <strong>5–10 hours/week</strong> score an average of <strong>13.4/20</strong>, compared to <strong>9.8/20</strong> for students studying under 2 hours.</p>
+                            </div>
+                        </div>
+                        <div class="insight-box highlight-orange">
+                            <div class="insight-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                            <div class="insight-content">
+                                <h4>Critical Absences Threshold</h4>
+                                <p>Students exceeding <strong>10 absences</strong> experience a sharp score drop of <strong>-3.2 points</strong> on final G3 grades on average.</p>
+                            </div>
+                        </div>
+                        <div class="insight-box highlight-green">
+                            <div class="insight-icon"><i class="fa-solid fa-bullseye"></i></div>
+                            <div class="insight-content">
+                                <h4>Period 2 (G2) Predictive Strength</h4>
+                                <p>G2 score holds a strong linear correlation (<strong>r &gt; 0.90</strong>) with G3 score, making it the most critical predictor feature.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECTION 3: PREDICT PERFORMANCE -->
+                <section id="predict-section" class="content-section">
+                    <div class="predict-container-grid">
+                        <!-- Left Side: Prediction Form -->
+                        <div class="form-card">
+                            <div class="card-header border-bottom">
+                                <div>
+                                    <h2><i class="fa-solid fa-wand-magic-sparkles"></i> Predict Student Performance</h2>
+                                    <p>Enter student academic profile to calculate predicted final G3 score</p>
+                                </div>
+                                <span class="badge badge-blue"><i class="fa-solid fa-sliders"></i> Input Parameters</span>
+                            </div>
+
+                            <form id="predictionForm" novalidate>
+                                <div class="form-grid">
+                                    <!-- Age Field -->
+                                    <div class="form-group">
+                                        <label for="studentAge">Student Age <span class="required">*</span></label>
+                                        <div class="input-with-icon">
+                                            <i class="fa-solid fa-cake-candles"></i>
+                                            <input type="number" id="studentAge" name="studentAge" min="15" max="22" value="17" required>
+                                        </div>
+                                        <span class="field-hint">Range: 15 - 22 years</span>
+                                        <span class="error-message" id="ageError"></span>
+                                    </div>
+
+                                    <!-- Study Time Field -->
+                                    <div class="form-group">
+                                        <label for="studyTime">Weekly Study Time <span class="required">*</span></label>
+                                        <div class="input-with-icon">
+                                            <i class="fa-solid fa-clock"></i>
+                                            <select id="studyTime" name="studyTime" required>
+                                                <option value="1">&lt; 2 Hours / Week</option>
+                                                <option value="2" selected>2 - 5 Hours / Week</option>
+                                                <option value="3">5 - 10 Hours / Week</option>
+                                                <option value="4">&gt; 10 Hours / Week</option>
+                                            </select>
+                                        </div>
+                                        <span class="error-message" id="studyTimeError"></span>
+                                    </div>
+
+                                    <!-- Past Absences -->
+                                    <div class="form-group">
+                                        <label for="absences">Cumulative Absences <span class="required">*</span></label>
+                                        <div class="input-with-icon">
+                                            <i class="fa-solid fa-user-minus"></i>
+                                            <input type="number" id="absences" name="absences" min="0" max="30" value="4" required>
+                                        </div>
+                                        <span class="field-hint">Range: 0 - 30 days</span>
+                                        <span class="error-message" id="absencesError"></span>
+                                    </div>
+
+                                    <!-- Prior Failures -->
+                                    <div class="form-group">
+                                        <label for="failures">Past Class Failures <span class="required">*</span></label>
+                                        <div class="input-with-icon">
+                                            <i class="fa-solid fa-circle-xmark"></i>
+                                            <select id="failures" name="failures" required>
+                                                <option value="0" selected>0 Previous Failures</option>
+                                                <option value="1">1 Previous Failure</option>
+                                                <option value="2">2 Previous Failures</option>
+                                                <option value="3">3+ Previous Failures</option>
+                                            </select>
+                                        </div>
+                                        <span class="error-message" id="failuresError"></span>
+                                    </div>
+
+                                    <!-- Period 1 Grade G1 -->
+                                    <div class="form-group">
+                                        <label for="g1Grade">Period 1 Grade (G1) <span class="required">*</span></label>
+                                        <div class="input-with-icon">
+                                            <i class="fa-solid fa-pen-ruler"></i>
+                                            <input type="number" id="g1Grade" name="g1Grade" min="0" max="20" step="0.5" value="12" required>
+                                        </div>
+                                        <span class="field-hint">Scale: 0 - 20 points</span>
+                                        <span class="error-message" id="g1Error"></span>
+                                    </div>
+
+                                    <!-- Period 2 Grade G2 -->
+                                    <div class="form-group">
+                                        <label for="g2Grade">Period 2 Grade (G2) <span class="required">*</span></label>
+                                        <div class="input-with-icon">
+                                            <i class="fa-solid fa-file-signature"></i>
+                                            <input type="number" id="g2Grade" name="g2Grade" min="0" max="20" step="0.5" value="13" required>
+                                        </div>
+                                        <span class="field-hint">Scale: 0 - 20 points</span>
+                                        <span class="error-message" id="g2Error"></span>
+                                    </div>
+
+                                    <!-- Extra Educational Support -->
+                                    <div class="form-group">
+                                        <label for="schoolsup">Extra Educational Support</label>
+                                        <div class="input-with-icon">
+                                            <i class="fa-solid fa-hand-holding-hand"></i>
+                                            <select id="schoolsup" name="schoolsup">
+                                                <option value="no" selected>No Extra Support</option>
+                                                <option value="yes">Yes (Tutoring / Remedial)</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <!-- Higher Education Aspirations -->
+                                    <div class="form-group">
+                                        <label for="higher">Higher Education Aspirations</label>
+                                        <div class="input-with-icon">
+                                            <i class="fa-solid fa-user-graduate"></i>
+                                            <select id="higher" name="higher">
+                                                <option value="yes" selected>Yes (Plans for University)</option>
+                                                <option value="no">No</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-actions">
+                                    <button type="submit" class="btn btn-primary" id="predictBtn">
+                                        <i class="fa-solid fa-bolt"></i>
+                                        <span>Predict Final Grade (G3)</span>
+                                    </button>
+                                    <button type="button" class="btn btn-outline" id="resetFormBtn">
+                                        <i class="fa-solid fa-rotate-left"></i>
+                                        <span>Reset Form</span>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Right Side: Result Display Box -->
+                        <div class="result-card" id="resultCard">
+                            <div class="card-header border-bottom">
+                                <div>
+                                    <h2><i class="fa-solid fa-square-poll-vertical"></i> Predicted Score Result</h2>
+                                    <p>Simulated model score and risk factor breakdown</p>
+                                </div>
+                                <span class="badge badge-demo" id="predictionStatusBadge">Demonstration Mode</span>
+                            </div>
+
+                            <div class="result-body">
+                                <div class="score-display-container">
+                                    <div class="predicted-score-ring" id="scoreRing">
+                                        <div class="score-number-box">
+                                            <span class="score-val" id="predictedGradeVal">13.2</span>
+                                            <span class="score-max">/ 20</span>
+                                        </div>
+                                    </div>
+                                    <div class="score-meta">
+                                        <span class="tier-pill tier-good" id="tierPill">Good Standing</span>
+                                        <span class="percentage-val" id="predictedPercentVal">66.0% Equivalent Score</span>
+                                    </div>
+                                </div>
+
+                                <!-- Key Drivers List -->
+                                <div class="drivers-section">
+                                    <h3><i class="fa-solid fa-list-check"></i> Key Impact Factors</h3>
+                                    <ul class="drivers-list" id="driversList">
+                                        <li class="driver-item positive">
+                                            <i class="fa-solid fa-circle-plus"></i>
+                                            <span><strong>Period 2 Performance:</strong> Strong score of 13/20 (+2.1 pts)</span>
+                                        </li>
+                                        <li class="driver-item positive">
+                                            <i class="fa-solid fa-circle-plus"></i>
+                                            <span><strong>Study Habits:</strong> 2-5 hrs/week study (+0.8 pts)</span>
+                                        </li>
+                                        <li class="driver-item negative">
+                                            <i class="fa-solid fa-circle-minus"></i>
+                                            <span><strong>Absence Penalty:</strong> 4 absences recorded (-0.4 pts)</span>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <!-- Actionable Advice -->
+                                <div class="recommendation-box" id="recommendationBox">
+                                    <i class="fa-solid fa-compass"></i>
+                                    <div>
+                                        <h4>Academic Recommendation</h4>
+                                        <p id="recommendationText">Student is on track to pass comfortably. Encouraging 1-2 additional study hours per week could boost final result into the Distinction tier (&ge;16).</p>
+                                    </div>
+                                </div>
+
+                                <!-- Demonstration Callout Banner -->
+                                <div class="callout-disclaimer">
+                                    <i class="fa-solid fa-circle-info"></i>
+                                    <div>
+                                        <strong>Frontend Simulation Notice:</strong> This prediction is generated via client-side mathematical weighting for UI preview. In production, this section will consume the live Python Flask Machine Learning REST API.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECTION 4: MODEL INSIGHTS -->
+                <section id="insights-section" class="content-section">
+                    <div class="section-intro">
+                        <div class="intro-card">
+                            <i class="fa-solid fa-microchip intro-icon"></i>
+                            <div>
+                                <h2>Machine Learning Model Insights & Benchmarks</h2>
+                                <p>Comparative analysis of 4 candidate regression algorithms evaluated on student performance data.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Placeholder Notice Banner -->
+                    <div class="alert-banner warning-banner">
+                        <i class="fa-solid fa-flask font-icon"></i>
+                        <div>
+                            <strong>Sample Metrics Notice:</strong> Below metrics represent benchmark evaluation results from offline model validation on the Student Dataset (80/20 train-test split). Actual API metrics will dynamically sync once Flask backend model artifacts are connected.
+                        </div>
+                    </div>
+
+                    <!-- Algorithms Comparison Cards -->
+                    <div class="models-grid">
+                        <!-- Model 1: Random Forest -->
+                        <div class="model-card featured">
+                            <div class="model-badge">Best Performer</div>
+                            <div class="model-header">
+                                <i class="fa-solid fa-tree-city"></i>
+                                <h3>Random Forest Regressor</h3>
+                                <span class="model-type">Ensemble Method</span>
+                            </div>
+                            <div class="model-metrics">
+                                <div class="metric-row">
+                                    <span class="label">R&sup2; Score (Accuracy):</span>
+                                    <span class="value font-bold text-success">0.865</span>
+                                </div>
+                                <div class="metric-progress-bar">
+                                    <div class="progress-fill fill-success" style="width: 86.5%"></div>
+                                </div>
+
+                                <div class="metric-row">
+                                    <span class="label">MAE (Mean Absolute Error):</span>
+                                    <span class="value">1.12</span>
+                                </div>
+
+                                <div class="metric-row">
+                                    <span class="label">RMSE (Root Mean Sq. Error):</span>
+                                    <span class="value">1.48</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Model 2: Gradient Boosting -->
+                        <div class="model-card">
+                            <div class="model-header">
+                                <i class="fa-solid fa-chart-gantt"></i>
+                                <h3>Gradient Boosting</h3>
+                                <span class="model-type">Boosting Ensemble</span>
+                            </div>
+                            <div class="model-metrics">
+                                <div class="metric-row">
+                                    <span class="label">R&sup2; Score (Accuracy):</span>
+                                    <span class="value font-bold text-primary">0.842</span>
+                                </div>
+                                <div class="metric-progress-bar">
+                                    <div class="progress-fill fill-primary" style="width: 84.2%"></div>
+                                </div>
+
+                                <div class="metric-row">
+                                    <span class="label">MAE (Mean Absolute Error):</span>
+                                    <span class="value">1.19</span>
+                                </div>
+
+                                <div class="metric-row">
+                                    <span class="label">RMSE (Root Mean Sq. Error):</span>
+                                    <span class="value">1.54</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Model 3: Linear Regression -->
+                        <div class="model-card">
+                            <div class="model-header">
+                                <i class="fa-solid fa-chart-line"></i>
+                                <h3>Linear Regression</h3>
+                                <span class="model-type">Baseline Linear</span>
+                            </div>
+                            <div class="model-metrics">
+                                <div class="metric-row">
+                                    <span class="label">R&sup2; Score (Accuracy):</span>
+                                    <span class="value font-bold text-info">0.810</span>
+                                </div>
+                                <div class="metric-progress-bar">
+                                    <div class="progress-fill fill-info" style="width: 81.0%"></div>
+                                </div>
+
+                                <div class="metric-row">
+                                    <span class="label">MAE (Mean Absolute Error):</span>
+                                    <span class="value">1.34</span>
+                                </div>
+
+                                <div class="metric-row">
+                                    <span class="label">RMSE (Root Mean Sq. Error):</span>
+                                    <span class="value">1.72</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Model 4: Lasso Regression -->
+                        <div class="model-card">
+                            <div class="model-header">
+                                <i class="fa-solid fa-filter"></i>
+                                <h3>Lasso Regression</h3>
+                                <span class="model-type">L1 Regularized</span>
+                            </div>
+                            <div class="model-metrics">
+                                <div class="metric-row">
+                                    <span class="label">R&sup2; Score (Accuracy):</span>
+                                    <span class="value font-bold text-warning">0.795</span>
+                                </div>
+                                <div class="metric-progress-bar">
+                                    <div class="progress-fill fill-warning" style="width: 79.5%"></div>
+                                </div>
+
+                                <div class="metric-row">
+                                    <span class="label">MAE (Mean Absolute Error):</span>
+                                    <span class="value">1.41</span>
+                                </div>
+
+                                <div class="metric-row">
+                                    <span class="label">RMSE (Root Mean Sq. Error):</span>
+                                    <span class="value">1.81</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Feature Importance Chart Row -->
+                    <div class="charts-grid one-col">
+                        <div class="chart-card">
+                            <div class="card-header">
+                                <div>
+                                    <h2><i class="fa-solid fa-ranking-star"></i> Random Forest Feature Importance</h2>
+                                    <p>Relative weight assigned by the machine learning algorithm to key student predictors</p>
+                                </div>
+                                <span class="badge badge-navy">ML Explainability</span>
+                            </div>
+                            <div class="chart-body">
+                                <canvas id="featureImportanceChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECTION 5: ABOUT PROJECT -->
+                <section id="about-section" class="content-section">
+                    <div class="about-grid">
+                        <!-- Overview Card -->
+                        <div class="about-card hero-about">
+                            <div class="hero-badge">Minor Project Presentation</div>
+                            <h2>StudentScope — Student Performance Analysis & Prediction System</h2>
+                            <p class="lead">An end-to-end Data Science & Machine Learning platform engineered to analyze student behavioral patterns, monitor academic metrics, and predict final academic achievements to prevent early dropouts.</p>
+
+                            <div class="about-stats-strip">
+                                <div class="stat-item">
+                                    <span class="stat-num">395</span>
+                                    <span class="stat-lbl">Dataset Records</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-num">33</span>
+                                    <span class="stat-lbl">Student Attributes</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-num">4</span>
+                                    <span class="stat-lbl">ML Algorithms</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-num">86.5%</span>
+                                    <span class="stat-lbl">Top R&sup2; Score</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Objective & Problem Statement Grid -->
+                        <div class="about-grid-two">
+                            <div class="about-card">
+                                <h3><i class="fa-solid fa-bullseye icon-blue"></i> Project Objective</h3>
+                                <ul class="custom-bullet-list">
+                                    <li>Provide educational institutions and tutors with intuitive visual analytics on student progress.</li>
+                                    <li>Identify at-risk students before final evaluations take place.</li>
+                                    <li>Quantify the impact of study hours, failures, and class attendance on student outcomes.</li>
+                                    <li>Deliver an interactive prediction system suitable for academic counseling and intervention.</li>
+                                </ul>
+                            </div>
+
+                            <div class="about-card">
+                                <h3><i class="fa-solid fa-triangle-exclamation icon-orange"></i> Problem Statement</h3>
+                                <p>Educational dropouts and poor academic performance often stem from unaddressed early warning indicators such as mounting absences or low mid-term grades. Traditional evaluation methods react after grades are finalized. StudentScope addresses this by deploying machine learning algorithms that forecast final period scores early in the term.</p>
+                            </div>
+                        </div>
+
+                        <!-- Technologies Used -->
+                        <div class="about-card">
+                            <h3><i class="fa-solid fa-code icon-navy"></i> Technologies & System Architecture</h3>
+                            <div class="tech-stack-grid">
+                                <div class="tech-box">
+                                    <i class="fa-brands fa-html5 tech-icon html"></i>
+                                    <h4>HTML5</h4>
+                                    <p>Semantic page structure & accessible web elements</p>
+                                </div>
+                                <div class="tech-box">
+                                    <i class="fa-brands fa-css3-alt tech-icon css"></i>
+                                    <h4>CSS3</h4>
+                                    <p>Custom Navy Blue design system, Flexbox, & CSS Grid</p>
+                                </div>
+                                <div class="tech-box">
+                                    <i class="fa-brands fa-js tech-icon js"></i>
+                                    <h4>JavaScript (ES6+)</h4>
+                                    <p>Client-side router, form validation, & data engine</p>
+                                </div>
+                                <div class="tech-box">
+                                    <i class="fa-solid fa-chart-simple tech-icon chartjs"></i>
+                                    <h4>Chart.js (v4)</h4>
+                                    <p>Interactive data visualizations & responsive canvases</p>
+                                </div>
+                                <div class="tech-box">
+                                    <i class="fa-brands fa-python tech-icon python"></i>
+                                    <h4>Python (Backend)</h4>
+                                    <p>Planned ML training backend & Scikit-learn models</p>
+                                </div>
+                                <div class="tech-box">
+                                    <i class="fa-solid fa-server tech-icon flask"></i>
+                                    <h4>Flask / REST API</h4>
+                                    <p>Target web service endpoint for model inference</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ML Methodology Pipeline -->
+                        <div class="about-card">
+                            <h3><i class="fa-solid fa-diagram-project icon-blue"></i> Machine Learning Methodology Pipeline</h3>
+                            <div class="pipeline-steps">
+                                <div class="pipeline-step">
+                                    <div class="step-num">1</div>
+                                    <div class="step-content">
+                                        <h4>Data Collection & Ingestion</h4>
+                                        <p>UCI Student Performance dataset containing demographic, social, and academic features.</p>
+                                    </div>
+                                </div>
+                                <div class="pipeline-step">
+                                    <div class="step-num">2</div>
+                                    <div class="step-content">
+                                        <h4>Preprocessing & Cleaning</h4>
+                                        <p>Handling categorical encodings (One-Hot), scale normalization, and outlier check.</p>
+                                    </div>
+                                </div>
+                                <div class="pipeline-step">
+                                    <div class="step-num">3</div>
+                                    <div class="step-content">
+                                        <h4>Feature Engineering & Selection</h4>
+                                        <p>Correlation analysis identifying G1, G2, absences, failures, and study time as top predictors.</p>
+                                    </div>
+                                </div>
+                                <div class="pipeline-step">
+                                    <div class="step-num">4</div>
+                                    <div class="step-content">
+                                        <h4>Model Training & Evaluation</h4>
+                                        <p>Cross-validated training of Linear, Lasso, Random Forest, and Gradient Boosting algorithms.</p>
+                                    </div>
+                                </div>
+                                <div class="pipeline-step">
+                                    <div class="step-num">5</div>
+                                    <div class="step-content">
+                                        <h4>Frontend Dashboard Integration</h4>
+                                        <p>Interactive dashboard presentation for real-time visualization and decision support.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Custom JavaScript File -->
+    <script src="script.js"></script>
+</body>
+</html>
